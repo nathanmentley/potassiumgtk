@@ -44,7 +44,7 @@ func (a *aComponent) onSubtractClick(processor potassium.IComponentProcessor) {
 //component render
 func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
     if props, ok := processor.GetProps().(aComponentProps); ok {
-        children := []potassium.IComponentProcessor{
+        colChildren := []potassium.IComponentProcessor{
             a.CreateElement(
                 potassium.NewComponentKey("button"),
                 potassiumgtk.NewButtonComponent,
@@ -55,8 +55,8 @@ func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.
         }
 
         if props.clicks < 3 {
-            children = append(
-                children, 
+            colChildren = append(
+                colChildren,
                 a.CreateElement(
                     potassium.NewComponentKey("label2"),
                     potassiumgtk.NewLabelComponent,
@@ -73,7 +73,7 @@ func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.
                     potassium.NewComponentKey("col"),
                     potassiumgtk.NewColComponent,
                     potassium.EmptyProps{},
-                    children,
+                    colChildren,
                 ),
                 a.CreateElement(
                     potassium.NewComponentKey("label"),
@@ -93,7 +93,5 @@ func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.
         }
     }
 
-    return &potassium.RenderResult{
-        []potassium.IComponentProcessor{},
-    }
+    return &potassium.RenderResult{}
 }

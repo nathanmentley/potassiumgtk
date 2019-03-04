@@ -16,8 +16,6 @@ import (
     "github.com/nathanmentley/potassium"
 )
 
-//AppComponent
-
 //Component construction
 type ColComponent struct {
     potassium.Component

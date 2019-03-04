@@ -39,6 +39,14 @@ func NewWindowComponent(parent potassium.IComponentProcessor) potassium.ICompone
 
     return &WindowComponent{win, potassium.NewComponent(parent), newGtkComponent()}
 }
+//iGtkComponent
+func (w *WindowComponent) getGtkWidget() gtk.IWidget {
+    return w.window
+}
+//component callback methods
+func (w *WindowComponent) onClose() {
+    gtk.MainQuit()
+}
 //IComponent
 func (w *WindowComponent) ComponentDidMount(processor potassium.IComponentProcessor) {
     w.Component.ComponentDidMount(processor)
@@ -48,6 +56,10 @@ func (w *WindowComponent) ComponentDidMount(processor potassium.IComponentProces
         w.window.Connect("destroy", w.onClose)
     }
 }
+func (w *WindowComponent) ComponentDidUpdate(processor potassium.IComponentProcessor) {
+    // Recursively show all widgets contained in this window.
+    w.window.ShowAll()
+}
 func (w *WindowComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
     if props, ok := processor.GetProps().(WindowComponentProps); ok {
         w.window.SetTitle(props.title)
@@ -55,18 +67,3 @@ func (w *WindowComponent) Render(processor potassium.IComponentProcessor) *potas
 
     return &potassium.RenderResult{processor.GetChildren()}
 }
-func (w *WindowComponent) ComponentDidUpdate(processor potassium.IComponentProcessor) {
-    // Recursively show all widgets contained in this window.
-    w.window.ShowAll()
-}
-
-//iGtkComponent
-func (w *WindowComponent) getGtkWidget() gtk.IWidget {
-    return w.window
-}
-
-//component callback methods
-func (w *WindowComponent) onClose() {
-    gtk.MainQuit()
-}
-

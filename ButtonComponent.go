@@ -41,7 +41,16 @@ func NewButtonComponent(parent potassium.IComponentProcessor) potassium.ICompone
 
     return &ButtonComponent{button, potassium.NewComponent(parent), newGtkComponent()}
 }
-
+//iGtkComponent
+func (b *ButtonComponent) getGtkWidget() gtk.IWidget {
+    return b.button
+}
+//component callback methods
+func (b *ButtonComponent) onClick(processor potassium.IComponentProcessor) {
+    if props, ok := processor.GetProps().(ButtonComponentProps); ok {
+        props.onClick()
+    }
+}
 //IComponent
 func (b *ButtonComponent) ComponentDidMount(processor potassium.IComponentProcessor) {
     b.Component.ComponentDidMount(processor)
@@ -50,23 +59,10 @@ func (b *ButtonComponent) ComponentDidMount(processor potassium.IComponentProces
         b.onClick(processor)
     })
 }
-
 func (b *ButtonComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
     if props, ok := processor.GetProps().(ButtonComponentProps); ok {
         b.button.SetLabel(props.title)
     }
 
-    return &potassium.RenderResult{nil}
-}
-
-//iGtkComponent
-func (b *ButtonComponent) getGtkWidget() gtk.IWidget {
-    return b.button
-}
-
-//component callback methods
-func (b *ButtonComponent) onClick(processor potassium.IComponentProcessor) {
-    if props, ok := processor.GetProps().(ButtonComponentProps); ok {
-        props.onClick()
-    }
+    return &potassium.RenderResult{}
 }

@@ -44,7 +44,6 @@ func (g *gtkToolkit) IsRunning() bool {
 }
 func (g *gtkToolkit) Shutdown() {}
 
-
 func (g *gtkToolkit) Mount(parent potassium.IComponentProcessor, child potassium.IComponentProcessor, index int) {
     parentGtk := g.getNearestGtkParent(parent)
 

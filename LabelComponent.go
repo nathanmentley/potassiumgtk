@@ -39,15 +39,15 @@ func NewLabelComponent(parent potassium.IComponentProcessor) potassium.IComponen
 
     return &LabelComponent{label, potassium.NewComponent(parent), newGtkComponent()}
 }
+//iGtkComponent
+func (l *LabelComponent) getGtkWidget() gtk.IWidget {
+    return l.label
+}
 //IComponent
 func (l *LabelComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
     if props, ok := processor.GetProps().(LabelComponentProps); ok {
         l.label.SetLabel(props.text)
     }
 
-    return &potassium.RenderResult{nil}
-}
-//iGtkComponent
-func (l *LabelComponent) getGtkWidget() gtk.IWidget {
-    return l.label
+    return &potassium.RenderResult{}
 }

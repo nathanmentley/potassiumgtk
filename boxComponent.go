@@ -31,10 +31,11 @@ type boxComponent struct {
 func newBoxComponent(parent potassium.IComponentProcessor) potassium.IComponent {
     return &boxComponent{nil, potassium.NewComponent(parent), newGtkComponent()}
 }
-//IComponent
-func (b *boxComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
-    return &potassium.RenderResult{processor.GetChildren()}
+//iGtkComponent
+func (b *boxComponent) getGtkWidget() gtk.IWidget {
+    return b.box
 }
+//IComponent
 func (b *boxComponent) ComponentDidMount(processor potassium.IComponentProcessor) {
     if props, ok := processor.GetProps().(boxComponentProps); ok {
         box, err := gtk.BoxNew(props.orientation, 1)
@@ -45,7 +46,6 @@ func (b *boxComponent) ComponentDidMount(processor potassium.IComponentProcessor
         }
     }
 }
-//iGtkComponent
-func (b *boxComponent) getGtkWidget() gtk.IWidget {
-    return b.box
+func (b *boxComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
+    return &potassium.RenderResult{processor.GetChildren()}
 }
