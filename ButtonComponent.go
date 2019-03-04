@@ -37,6 +37,7 @@ type ButtonComponent struct {
     button *gtk.Button
 
     potassium.Component
+    gtkComponent
 }
 func NewButtonComponent(parent potassium.IComponentProcessor) potassium.IComponent {  
     button, err := gtk.ButtonNew()
@@ -44,7 +45,7 @@ func NewButtonComponent(parent potassium.IComponentProcessor) potassium.ICompone
         log.Fatal("Unable to create button:", err)
     }
 
-    return &ButtonComponent{button, potassium.NewComponent(parent)}
+    return &ButtonComponent{button, potassium.NewComponent(parent), newGtkComponent()}
 }
 
 //IComponent

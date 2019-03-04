@@ -45,42 +45,35 @@ func (g *gtkToolkit) IsRunning() bool {
 func (g *gtkToolkit) Shutdown() {}
 
 
-func (g *gtkToolkit) Mount(parent potassium.IComponentProcessor, child potassium.IComponentProcessor) {
-    /*parentGtk, ok := parent.(iGtkComponent)
-
-    if ok {
-        childGtk, ok := child.(iGtkComponent)
-
-        if ok {
-            //TODO: support more container types.
-            parentContainer, ok := parentGtk.getGtkWidget().(*gtk.Window)
-
-            if ok {
-                parentContainer.Add(childGtk.getGtkWidget())
-            }
-            
-            parentContainer2, ok := parentGtk.getGtkWidget().(*gtk.Grid)
-
-            if ok {
-                parentContainer2.Add(childGtk.getGtkWidget())
-            }
-        }
-    }*/
-
+func (g *gtkToolkit) Mount(parent potassium.IComponentProcessor, child potassium.IComponentProcessor, index int) {
     parentGtk := g.getNearestGtkParent(parent)
 
     if parentGtk != nil {
-        if childGtk, ok := child.GetComponent().(iGtkComponent); ok {
+        childComp := child.GetComponent()
+        if childGtk, ok := childComp.(iGtkComponent); ok {
             //TODO: support more container types.
-            parentContainer, ok := parentGtk.getGtkWidget().(*gtk.Window)
-
-            if ok {
-                parentContainer.Add(childGtk.getGtkWidget())
+            if window, ok := parentGtk.getGtkWidget().(*gtk.Window); ok {
+                window.Add(childGtk.getGtkWidget())
+            } else if box, ok := parentGtk.getGtkWidget().(*gtk.Box); ok {
+                box.PackStart(childGtk.getGtkWidget(), true, true, 0)
+                box.ReorderChild(childGtk.getGtkWidget(), index)
             }
-            parentContainer2, ok := parentGtk.getGtkWidget().(*gtk.Grid)
+        }
+    }
+}
 
-            if ok {
-                parentContainer2.Add(childGtk.getGtkWidget())
+func (g *gtkToolkit) EnsureMount(parent potassium.IComponentProcessor, child potassium.IComponentProcessor, index int) {
+    parentGtk := g.getNearestGtkParent(parent)
+
+    if parentGtk != nil {
+        childComp := child.GetComponent()
+        if childGtk, ok := childComp.(iGtkComponent); ok {
+            //TODO: support more container types.
+            if _, ok := parentGtk.getGtkWidget().(*gtk.Window); ok {
+                //TODO: Does this need to do anything?
+                //window.Add(childGtk.getGtkWidget())
+            } else if box, ok := parentGtk.getGtkWidget().(*gtk.Box); ok {
+                box.ReorderChild(childGtk.getGtkWidget(), index)
             }
         }
     }
@@ -92,15 +85,11 @@ func (g *gtkToolkit) Unmount(parent potassium.IComponentProcessor, child potassi
     if parentGtk != nil {
         if childGtk, ok := child.GetComponent().(iGtkComponent); ok {
             //TODO: support more container types.
-            parentContainer, ok := parentGtk.getGtkWidget().(*gtk.Window)
-
-            if ok {
-                parentContainer.Remove(childGtk.getGtkWidget())
+            if window, ok := parentGtk.getGtkWidget().(*gtk.Window); ok {
+                window.Remove(childGtk.getGtkWidget())
             }
-            parentContainer2, ok := parentGtk.getGtkWidget().(*gtk.Grid)
-
-            if ok {
-                parentContainer2.Remove(childGtk.getGtkWidget())
+            if box, ok := parentGtk.getGtkWidget().(*gtk.Box); ok {
+                box.Remove(childGtk.getGtkWidget())
             }
         }
     }

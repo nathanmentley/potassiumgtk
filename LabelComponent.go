@@ -37,6 +37,7 @@ type LabelComponent struct {
     label *gtk.Label
 
     potassium.Component
+    gtkComponent
 }
 func NewLabelComponent(parent potassium.IComponentProcessor) potassium.IComponent {  
     label, err := gtk.LabelNew("")
@@ -44,7 +45,7 @@ func NewLabelComponent(parent potassium.IComponentProcessor) potassium.IComponen
         log.Fatal("Unable to create label:", err)
     }
 
-    return &LabelComponent{label, potassium.NewComponent(parent)}
+    return &LabelComponent{label, potassium.NewComponent(parent), newGtkComponent()}
 }
 
 //IComponent

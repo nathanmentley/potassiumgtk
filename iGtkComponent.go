@@ -16,4 +16,7 @@ import (
 
 type iGtkComponent interface {
     getGtkWidget() gtk.IWidget
+    
+    getIndex() int
+    setIndex(index int)
 }

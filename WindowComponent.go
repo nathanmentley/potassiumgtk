@@ -37,6 +37,7 @@ type WindowComponent struct {
     window *gtk.Window
 
     potassium.Component
+    gtkComponent
 }
 func NewWindowComponent(parent potassium.IComponentProcessor) potassium.IComponent {  
     win, err := gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
@@ -44,7 +45,7 @@ func NewWindowComponent(parent potassium.IComponentProcessor) potassium.ICompone
         log.Fatal("Unable to create window:", err)
     }
 
-    return &WindowComponent{win, potassium.NewComponent(parent)}
+    return &WindowComponent{win, potassium.NewComponent(parent), newGtkComponent()}
 }
 
 //IComponent
