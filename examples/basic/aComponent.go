@@ -54,13 +54,13 @@ func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.
             ),
         }
 
-        if props.clicks < 10 {
+        if props.clicks < 3 {
             children = append(
                 children, 
                 a.CreateElement(
-                    potassium.NewComponentKey("label2" + strconv.Itoa(props.clicks)),
+                    potassium.NewComponentKey("label2"),
                     potassiumgtk.NewLabelComponent,
-                    potassiumgtk.NewLabelComponentProps("Total button clicks (only less than ten): " + strconv.Itoa(props.clicks)),
+                    potassiumgtk.NewLabelComponentProps("Total button clicks (only less than three): " + strconv.Itoa(props.clicks)),
                     []potassium.IComponentProcessor{
                     },
                 ),
@@ -76,7 +76,7 @@ func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.
                     children,
                 ),
                 a.CreateElement(
-                    potassium.NewComponentKey("label" + strconv.Itoa(props.clicks)),
+                    potassium.NewComponentKey("label"),
                     potassiumgtk.NewLabelComponent,
                     potassiumgtk.NewLabelComponentProps("Total button clicks: " + strconv.Itoa(props.clicks)),
                     []potassium.IComponentProcessor{
