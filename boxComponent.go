@@ -21,17 +21,6 @@ import (
 type boxComponentProps struct {
     orientation gtk.Orientation
 }
-func newBoxComponentProps(orientation gtk.Orientation) boxComponentProps {  
-    return boxComponentProps{orientation}
-}
-
-//State
-type boxComponentState struct {
-}
-func newBoxComponentState() boxComponentState {  
-    return boxComponentState{}
-}
-
 //Component
 type boxComponent struct {
     box *gtk.Box
@@ -42,12 +31,7 @@ type boxComponent struct {
 func newBoxComponent(parent potassium.IComponentProcessor) potassium.IComponent {
     return &boxComponent{nil, potassium.NewComponent(parent), newGtkComponent()}
 }
-
 //IComponent
-func (b *boxComponent) SetInitialState(props potassium.IProps) potassium.IState {
-    return newBoxComponentState()
-}
-
 func (b *boxComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
     return &potassium.RenderResult{processor.GetChildren()}
 }
@@ -61,7 +45,6 @@ func (b *boxComponent) ComponentDidMount(processor potassium.IComponentProcessor
         }
     }
 }
-
 //iGtkComponent
 func (b *boxComponent) getGtkWidget() gtk.IWidget {
     return b.box

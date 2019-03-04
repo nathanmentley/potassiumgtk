@@ -24,14 +24,6 @@ type LabelComponentProps struct {
 func NewLabelComponentProps(text string) LabelComponentProps {  
     return LabelComponentProps{text}
 }
-
-//State
-type LabelComponentState struct {
-}
-func NewLabelComponentState() LabelComponentState {  
-    return LabelComponentState{}
-}
-
 //Component
 type LabelComponent struct {
     label *gtk.Label
@@ -47,22 +39,14 @@ func NewLabelComponent(parent potassium.IComponentProcessor) potassium.IComponen
 
     return &LabelComponent{label, potassium.NewComponent(parent), newGtkComponent()}
 }
-
 //IComponent
-func (l *LabelComponent) SetInitialState(props potassium.IProps) potassium.IState {
-    return NewLabelComponentState()
-}
-
 func (l *LabelComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
-    props, ok := processor.GetProps().(LabelComponentProps)
-
-    if ok {
+    if props, ok := processor.GetProps().(LabelComponentProps); ok {
         l.label.SetLabel(props.text)
     }
 
     return &potassium.RenderResult{nil}
 }
-
 //iGtkComponent
 func (l *LabelComponent) getGtkWidget() gtk.IWidget {
     return l.label

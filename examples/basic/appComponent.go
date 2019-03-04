@@ -17,18 +17,12 @@ import (
     "github.com/nathanmentley/potassiumgtk"
 )
 
-//AppComponent
-
 //Props
 type appComponentProps struct {}
-func newAppComponentProps() appComponentProps { return appComponentProps{} }
-
 //State
 type appComponentState struct {
     clicks int
 }
-func newAppComponentState() appComponentState { return appComponentState{0} }
-
 //Component construction
 type appComponent struct {
     potassium.Component
@@ -36,37 +30,25 @@ type appComponent struct {
 func newAppComponent(parent potassium.IComponentProcessor) potassium.IComponent {  
     return &appComponent{potassium.NewComponent(parent)}
 }
-
 func (a *appComponent) SetInitialState(props potassium.IProps) potassium.IState {
-    return newAppComponentState()
+    return appComponentState{0}
 }
-
 //component callback methods
-func (a *appComponent) onClick(processor potassium.IComponentProcessor) {
-    state, ok := processor.GetState().(appComponentState)
-    if ok {
+func (a *appComponent) onAddClick(processor potassium.IComponentProcessor) {
+    if state, ok := processor.GetState().(appComponentState); ok {
         state.clicks = state.clicks + 1
         processor.SetState(state)
     }
 }
-
+func (a *appComponent) onSubtractClick(processor potassium.IComponentProcessor) {
+    if state, ok := processor.GetState().(appComponentState); ok {
+        state.clicks = state.clicks - 1
+        processor.SetState(state)
+    }
+}
 //component render
 func (a *appComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
-    state, ok := processor.GetState().(appComponentState)
-
-    if ok {
-        /*
-        TODO: Setup some jsx like preprocessor to convert this:
-
-        return <potassiumgtk.Window key="window" title={"Window Title " + strconv.Itoa(state.clicks)}>
-            <potassiumgtk.Box key="grid">
-                <potassiumgtk.Label key={"label"} title={"Total button clicks: " + strconv.Itoa(state.clicks)} />
-                <potassiumgtk.Button key="button" title="Button" onClick={func() { a.onClick(processor) }} />
-            </potassiumgtk.Box>
-        </potassiumgtk.Window>
-
-        To this:
-        */
+    if state, ok := processor.GetState().(appComponentState); ok {
         return &potassium.RenderResult{
             []potassium.IComponentProcessor{
                 a.CreateElement(
@@ -77,12 +59,12 @@ func (a *appComponent) Render(processor potassium.IComponentProcessor) *potassiu
                         a.CreateElement(
                             potassium.NewComponentKey("row"),
                             potassiumgtk.NewRowComponent,
-                            potassiumgtk.NewRowComponentProps(),
+                            potassium.EmptyProps{},
                             []potassium.IComponentProcessor{
                                 a.CreateElement(
                                     potassium.NewComponentKey("appButtonRow"),
                                     newAComponent,
-                                    newAComponentProps(state.clicks, func() { a.onClick(processor) }),
+                                    aComponentProps{state.clicks, func() { a.onAddClick(processor) }, func() { a.onSubtractClick(processor) }},
                                     []potassium.IComponentProcessor{
                                     },
                                 ),
@@ -93,7 +75,6 @@ func (a *appComponent) Render(processor potassium.IComponentProcessor) *potassiu
             },
         }
     }
-    
     return &potassium.RenderResult{
         []potassium.IComponentProcessor{},
     }

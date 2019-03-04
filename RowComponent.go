@@ -16,16 +16,6 @@ import (
     "github.com/nathanmentley/potassium"
 )
 
-//AppComponent
-
-//Props
-type RowComponentProps struct {}
-func NewRowComponentProps() RowComponentProps { return RowComponentProps{} }
-
-//State
-type RowComponentState struct {}
-func NewRowComponentState() RowComponentState { return RowComponentState{} }
-
 //Component construction
 type RowComponent struct {
     potassium.Component
@@ -33,11 +23,6 @@ type RowComponent struct {
 func NewRowComponent(parent potassium.IComponentProcessor) potassium.IComponent {  
     return &RowComponent{potassium.NewComponent(parent)}
 }
-
-func (r *RowComponent) SetInitialState(props potassium.IProps) potassium.IState {
-    return NewRowComponentState()
-}
-
 //component render
 func (r *RowComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
     return &potassium.RenderResult{
@@ -45,7 +30,7 @@ func (r *RowComponent) Render(processor potassium.IComponentProcessor) *potassiu
             r.CreateElement(
                 potassium.NewComponentKey("Box"),
                 newBoxComponent,
-                newBoxComponentProps(gtk.ORIENTATION_HORIZONTAL),
+                boxComponentProps{gtk.ORIENTATION_HORIZONTAL},
                 processor.GetChildren(),
             ),
         },

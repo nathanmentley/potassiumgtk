@@ -26,12 +26,6 @@ func NewButtonComponentProps(title string, onClick func()) ButtonComponentProps 
     return ButtonComponentProps{title, onClick}
 }
 
-//State
-type ButtonComponentState struct {}
-func NewButtonComponentState() ButtonComponentState {  
-    return ButtonComponentState{}
-}
-
 //Component
 type ButtonComponent struct {
     button *gtk.Button
@@ -49,10 +43,6 @@ func NewButtonComponent(parent potassium.IComponentProcessor) potassium.ICompone
 }
 
 //IComponent
-func (b *ButtonComponent) SetInitialState(props potassium.IProps) potassium.IState {
-    return NewButtonComponentState()
-}
-
 func (b *ButtonComponent) ComponentDidMount(processor potassium.IComponentProcessor) {
     b.Component.ComponentDidMount(processor)
     
@@ -62,9 +52,7 @@ func (b *ButtonComponent) ComponentDidMount(processor potassium.IComponentProces
 }
 
 func (b *ButtonComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
-    props, ok := processor.GetProps().(ButtonComponentProps)
-
-    if ok {
+    if props, ok := processor.GetProps().(ButtonComponentProps); ok {
         b.button.SetLabel(props.title)
     }
 
@@ -78,8 +66,7 @@ func (b *ButtonComponent) getGtkWidget() gtk.IWidget {
 
 //component callback methods
 func (b *ButtonComponent) onClick(processor potassium.IComponentProcessor) {
-    props, ok := processor.GetProps().(ButtonComponentProps)
-    if ok {
+    if props, ok := processor.GetProps().(ButtonComponentProps); ok {
         props.onClick()
     }
 }

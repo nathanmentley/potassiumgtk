@@ -73,6 +73,7 @@ func (g *gtkToolkit) EnsureMount(parent potassium.IComponentProcessor, child pot
                 //TODO: Does this need to do anything?
                 //window.Add(childGtk.getGtkWidget())
             } else if box, ok := parentGtk.getGtkWidget().(*gtk.Box); ok {
+                box.PackStart(childGtk.getGtkWidget(), true, true, 0)
                 box.ReorderChild(childGtk.getGtkWidget(), index)
             }
         }

@@ -17,19 +17,12 @@ import (
     "github.com/nathanmentley/potassiumgtk"
 )
 
-//AppComponent
-
 //Props
 type aComponentProps struct {
     clicks int
-    onClick func()
+    onAddClick func()
+    onSubstractClick func()
 }
-func newAComponentProps(clicks int, onClick func()) aComponentProps { return aComponentProps{clicks, onClick} }
-
-//State
-type aComponentState struct {}
-func newAComponentState() aComponentState { return aComponentState{}}
-
 //Component construction
 type aComponent struct {
     potassium.Component
@@ -37,19 +30,17 @@ type aComponent struct {
 func newAComponent(parent potassium.IComponentProcessor) potassium.IComponent {  
     return &aComponent{potassium.NewComponent(parent)}
 }
-
-func (a *aComponent) SetInitialState(props potassium.IProps) potassium.IState {
-    return newAComponentState()
-}
-
 //component callback methods
-func (a *aComponent) onClick(processor potassium.IComponentProcessor) {
-    props, ok := processor.GetProps().(aComponentProps)
-    if ok {
-        props.onClick()
+func (a *aComponent) onAddClick(processor potassium.IComponentProcessor) {
+    if props, ok := processor.GetProps().(aComponentProps); ok {
+        props.onAddClick()
     }
 }
-
+func (a *aComponent) onSubtractClick(processor potassium.IComponentProcessor) {
+    if props, ok := processor.GetProps().(aComponentProps); ok {
+        props.onSubstractClick()
+    }
+}
 //component render
 func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
     if props, ok := processor.GetProps().(aComponentProps); ok {
@@ -57,7 +48,7 @@ func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.
             a.CreateElement(
                 potassium.NewComponentKey("button"),
                 potassiumgtk.NewButtonComponent,
-                potassiumgtk.NewButtonComponentProps("Button", func() { a.onClick(processor) }),
+                potassiumgtk.NewButtonComponentProps("Subtract Button", func() { a.onSubtractClick(processor) }),
                 []potassium.IComponentProcessor{
                 },
             ),
@@ -67,7 +58,7 @@ func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.
             children = append(
                 children, 
                 a.CreateElement(
-                    potassium.NewComponentKey("label2_" + strconv.Itoa(props.clicks)),
+                    potassium.NewComponentKey("label2" + strconv.Itoa(props.clicks)),
                     potassiumgtk.NewLabelComponent,
                     potassiumgtk.NewLabelComponentProps("Total button clicks (only less than ten): " + strconv.Itoa(props.clicks)),
                     []potassium.IComponentProcessor{
@@ -81,11 +72,11 @@ func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.
                 a.CreateElement(
                     potassium.NewComponentKey("col"),
                     potassiumgtk.NewColComponent,
-                    potassiumgtk.NewColComponentProps(),
+                    potassium.EmptyProps{},
                     children,
                 ),
                 a.CreateElement(
-                    potassium.NewComponentKey("label_" + strconv.Itoa(props.clicks)),
+                    potassium.NewComponentKey("label" + strconv.Itoa(props.clicks)),
                     potassiumgtk.NewLabelComponent,
                     potassiumgtk.NewLabelComponentProps("Total button clicks: " + strconv.Itoa(props.clicks)),
                     []potassium.IComponentProcessor{
@@ -94,7 +85,7 @@ func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.
                 a.CreateElement(
                     potassium.NewComponentKey("button2"),
                     potassiumgtk.NewButtonComponent,
-                    potassiumgtk.NewButtonComponentProps("Button", func() { a.onClick(processor) }),
+                    potassiumgtk.NewButtonComponentProps("Add Button", func() { a.onAddClick(processor) }),
                     []potassium.IComponentProcessor{
                     },
                 ),

@@ -18,14 +18,6 @@ import (
 
 //AppComponent
 
-//Props
-type ColComponentProps struct {}
-func NewColComponentProps() ColComponentProps { return ColComponentProps{} }
-
-//State
-type ColComponentState struct {}
-func NewColComponentState() ColComponentState { return ColComponentState{} }
-
 //Component construction
 type ColComponent struct {
     potassium.Component
@@ -33,11 +25,6 @@ type ColComponent struct {
 func NewColComponent(parent potassium.IComponentProcessor) potassium.IComponent {  
     return &ColComponent{potassium.NewComponent(parent)}
 }
-
-func (r *ColComponent) SetInitialState(props potassium.IProps) potassium.IState {
-    return NewColComponentState()
-}
-
 //component render
 func (r *ColComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
     return &potassium.RenderResult{
@@ -45,7 +32,7 @@ func (r *ColComponent) Render(processor potassium.IComponentProcessor) *potassiu
             r.CreateElement(
                 potassium.NewComponentKey("Box"),
                 newBoxComponent,
-                newBoxComponentProps(gtk.ORIENTATION_VERTICAL),
+                boxComponentProps{gtk.ORIENTATION_VERTICAL},
                 processor.GetChildren(),
             ),
         },

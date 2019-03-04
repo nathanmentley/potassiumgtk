@@ -24,14 +24,6 @@ type WindowComponentProps struct {
 func NewWindowComponentProps(title string) WindowComponentProps {  
     return WindowComponentProps{title}
 }
-
-//State
-type WindowComponentState struct {
-}
-func NewWindowComponentState() WindowComponentState {  
-    return WindowComponentState{}
-}
-
 //Component
 type WindowComponent struct {
     window *gtk.Window
@@ -47,27 +39,17 @@ func NewWindowComponent(parent potassium.IComponentProcessor) potassium.ICompone
 
     return &WindowComponent{win, potassium.NewComponent(parent), newGtkComponent()}
 }
-
 //IComponent
-func (w *WindowComponent) SetInitialState(props potassium.IProps) potassium.IState {
-    return NewWindowComponentState()
-}
-
 func (w *WindowComponent) ComponentDidMount(processor potassium.IComponentProcessor) {
     w.Component.ComponentDidMount(processor)
     
-    props, ok := processor.GetProps().(WindowComponentProps)
-
-    if ok {
+    if props, ok := processor.GetProps().(WindowComponentProps); ok {
         w.window.SetTitle(props.title)
         w.window.Connect("destroy", w.onClose)
     }
 }
-
 func (w *WindowComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
-    props, ok := processor.GetProps().(WindowComponentProps)
-
-    if ok {
+    if props, ok := processor.GetProps().(WindowComponentProps); ok {
         w.window.SetTitle(props.title)
     }
 
