@@ -22,6 +22,7 @@ type appComponentProps struct {}
 //State
 type appComponentState struct {
     clicks int
+    textValue string
 }
 //Component construction
 type appComponent struct {
@@ -31,7 +32,7 @@ func newAppComponent(parent potassium.IComponentProcessor) potassium.IComponent 
     return &appComponent{potassium.NewComponent(parent)}
 }
 func (a *appComponent) SetInitialState(props potassium.IProps) potassium.IState {
-    return appComponentState{0}
+    return appComponentState{0, ""}
 }
 //component callback methods
 func (a *appComponent) onAddClick(processor potassium.IComponentProcessor) {
@@ -46,6 +47,12 @@ func (a *appComponent) onSubtractClick(processor potassium.IComponentProcessor) 
         processor.SetState(state)
     }
 }
+func (a *appComponent) onTextChange(processor potassium.IComponentProcessor, text string) {
+    if state, ok := processor.GetState().(appComponentState); ok {
+        state.textValue = text
+        processor.SetState(state)
+    }
+}
 //component render
 func (a *appComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
     if state, ok := processor.GetState().(appComponentState); ok {
@@ -57,10 +64,24 @@ func (a *appComponent) Render(processor potassium.IComponentProcessor) *potassiu
                     potassiumgtk.NewWindowComponentProps("Window Title " + strconv.Itoa(state.clicks)),
                     []potassium.IComponentProcessor{
                         a.CreateElement(
-                            potassium.NewComponentKey("row"),
-                            potassiumgtk.NewRowComponent,
+                            potassium.NewComponentKey("col"),
+                            potassiumgtk.NewColComponent,
                             potassium.EmptyProps{},
                             []potassium.IComponentProcessor{
+                                a.CreateElement(
+                                    potassium.NewComponentKey("label"),
+                                    potassiumgtk.NewLabelComponent,
+                                    potassiumgtk.NewLabelComponentProps(state.textValue),
+                                    []potassium.IComponentProcessor{
+                                    },
+                                ),
+                                a.CreateElement(
+                                    potassium.NewComponentKey("entry"),
+                                    potassiumgtk.NewEntryComponent,
+                                    potassiumgtk.NewEntryComponentProps(state.textValue, func(text string) { a.onTextChange(processor, text) }),
+                                    []potassium.IComponentProcessor{
+                                    },
+                                ),
                                 a.CreateElement(
                                     potassium.NewComponentKey("appButtonRow"),
                                     newAComponent,
@@ -75,6 +96,7 @@ func (a *appComponent) Render(processor potassium.IComponentProcessor) *potassiu
             },
         }
     }
+
     return &potassium.RenderResult{
         []potassium.IComponentProcessor{},
     }

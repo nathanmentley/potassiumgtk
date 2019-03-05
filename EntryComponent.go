@@ -18,50 +18,52 @@ import (
 )
 
 //Props
-type ButtonComponentProps struct {
-    title string
-    onClick func()
+type EntryComponentProps struct {
+    value string
+    onChange func(string)
 }
-func NewButtonComponentProps(title string, onClick func()) ButtonComponentProps {  
-    return ButtonComponentProps{title, onClick}
+func NewEntryComponentProps(value string, onChange func(string)) EntryComponentProps {  
+    return EntryComponentProps{value, onChange}
 }
 
 //Component
-type ButtonComponent struct {
-    button *gtk.Button
+type EntryComponent struct {
+    entry *gtk.Entry
 
     potassium.Component
     gtkComponent
 }
-func NewButtonComponent(parent potassium.IComponentProcessor) potassium.IComponent {  
-    button, err := gtk.ButtonNew()
+func NewEntryComponent(parent potassium.IComponentProcessor) potassium.IComponent {  
+    entry, err := gtk.EntryNew()
     if err != nil {
-        log.Fatal("Unable to create button:", err)
+        log.Fatal("Unable to create entry:", err)
     }
 
-    return &ButtonComponent{button, potassium.NewComponent(parent), newGtkComponent()}
-}
-//iGtkComponent
-func (b *ButtonComponent) getGtkWidget() gtk.IWidget {
-    return b.button
+    return &EntryComponent{entry, potassium.NewComponent(parent), newGtkComponent()}
 }
 //component callback methods
-func (b *ButtonComponent) onClick(processor potassium.IComponentProcessor) {
-    if props, ok := processor.GetProps().(ButtonComponentProps); ok && props.onClick != nil {
-        props.onClick()
+func (e *EntryComponent) onChange(processor potassium.IComponentProcessor) {
+    if props, ok := processor.GetProps().(EntryComponentProps); ok {
+        text, err := e.entry.GetText()
+        if err == nil && text != props.value {
+            props.onChange(text)
+        }
     }
 }
-//IComponent
-func (b *ButtonComponent) ComponentDidMount(processor potassium.IComponentProcessor) {
-    b.Component.ComponentDidMount(processor)
+func (e *EntryComponent) ComponentDidMount(processor potassium.IComponentProcessor) {
+    e.Component.ComponentDidMount(processor)
     
-    b.button.Connect("clicked", func() { 
-        b.onClick(processor)
+    e.entry.Connect("changed", func() { 
+        e.onChange(processor)
     })
 }
-func (b *ButtonComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
-    if props, ok := processor.GetProps().(ButtonComponentProps); ok {
-        b.button.SetLabel(props.title)
+//iGtkComponent
+func (e *EntryComponent) getGtkWidget() gtk.IWidget {
+    return e.entry
+}
+func (e *EntryComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
+    if props, ok := processor.GetProps().(EntryComponentProps); ok {
+        e.entry.SetText(props.value)
     }
 
     return &potassium.RenderResult{}

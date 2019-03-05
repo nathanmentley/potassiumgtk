@@ -70,23 +70,30 @@ func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.
         return &potassium.RenderResult{
             []potassium.IComponentProcessor{
                 a.CreateElement(
-                    potassium.NewComponentKey("col"),
-                    potassiumgtk.NewColComponent,
+                    potassium.NewComponentKey("row"),
+                    potassiumgtk.NewRowComponent,
                     potassium.EmptyProps{},
-                    colChildren,
-                ),
-                a.CreateElement(
-                    potassium.NewComponentKey("label"),
-                    potassiumgtk.NewLabelComponent,
-                    potassiumgtk.NewLabelComponentProps("Total button clicks: " + strconv.Itoa(props.clicks)),
                     []potassium.IComponentProcessor{
-                    },
-                ),
-                a.CreateElement(
-                    potassium.NewComponentKey("button2"),
-                    potassiumgtk.NewButtonComponent,
-                    potassiumgtk.NewButtonComponentProps("Add Button", func() { a.onAddClick(processor) }),
-                    []potassium.IComponentProcessor{
+                        a.CreateElement(
+                            potassium.NewComponentKey("col"),
+                            potassiumgtk.NewColComponent,
+                            potassium.EmptyProps{},
+                            colChildren,
+                        ),
+                        a.CreateElement(
+                            potassium.NewComponentKey("label"),
+                            potassiumgtk.NewLabelComponent,
+                            potassiumgtk.NewLabelComponentProps("Total button clicks: " + strconv.Itoa(props.clicks)),
+                            []potassium.IComponentProcessor{
+                            },
+                        ),
+                        a.CreateElement(
+                            potassium.NewComponentKey("button2"),
+                            potassiumgtk.NewButtonComponent,
+                            potassiumgtk.NewButtonComponentProps("Add Button", func() { a.onAddClick(processor) }),
+                            []potassium.IComponentProcessor{
+                            },
+                        ),
                     },
                 ),
             },
