@@ -21,7 +21,7 @@ func main() {
         potassium.NewComponentWrapper(
             potassium.NewComponentKey("app"),
             newAppComponent,
-            appComponentProps{},
+            map[string]interface{}{},
             []potassium.IComponentProcessor{},
         ),
     )

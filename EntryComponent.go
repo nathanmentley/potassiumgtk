@@ -17,15 +17,6 @@ import (
     "github.com/nathanmentley/potassium"
 )
 
-//Props
-type EntryComponentProps struct {
-    value string
-    onChange func(string)
-}
-func NewEntryComponentProps(value string, onChange func(string)) EntryComponentProps {  
-    return EntryComponentProps{value, onChange}
-}
-
 //Component
 type EntryComponent struct {
     entry *gtk.Entry
@@ -43,10 +34,12 @@ func NewEntryComponent(parent potassium.IComponentProcessor) potassium.IComponen
 }
 //component callback methods
 func (e *EntryComponent) onChange(processor potassium.IComponentProcessor) {
-    if props, ok := processor.GetProps().(EntryComponentProps); ok {
-        text, err := e.entry.GetText()
-        if err == nil && text != props.value {
-            props.onChange(text)
+    if onChange, ok := processor.GetProps()["onChange"].(func(string)); ok {
+        if value, ok := processor.GetProps()["value"].(string); ok {
+            text, err := e.entry.GetText()
+            if err == nil && text != value {
+                onChange(text)
+            }
         }
     }
 }
@@ -62,8 +55,8 @@ func (e *EntryComponent) getGtkWidget() gtk.IWidget {
     return e.entry
 }
 func (e *EntryComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
-    if props, ok := processor.GetProps().(EntryComponentProps); ok {
-        e.entry.SetText(props.value)
+    if value, ok := processor.GetProps()["value"].(string); ok {
+        e.entry.SetText(value)
     }
 
     return &potassium.RenderResult{}

@@ -17,8 +17,6 @@ import (
     "github.com/nathanmentley/potassiumgtk"
 )
 
-//Props
-type appComponentProps struct {}
 //State
 type appComponentState struct {
     clicks int
@@ -31,7 +29,7 @@ type appComponent struct {
 func newAppComponent(parent potassium.IComponentProcessor) potassium.IComponent {  
     return &appComponent{potassium.NewComponent(parent)}
 }
-func (a *appComponent) SetInitialState(props potassium.IProps) potassium.IState {
+func (a *appComponent) SetInitialState(props map[string]interface{}) potassium.IState {
     return appComponentState{0, ""}
 }
 //component callback methods
@@ -55,37 +53,52 @@ func (a *appComponent) onTextChange(processor potassium.IComponentProcessor, tex
 }
 //component render
 func (a *appComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
+    return a.render(processor)
+}
+
+func (a *appComponent) render(processor potassium.IComponentProcessor) *potassium.RenderResult {
     if state, ok := processor.GetState().(appComponentState); ok {
         return &potassium.RenderResult{
             []potassium.IComponentProcessor{
                 a.CreateElement(
                     potassium.NewComponentKey("window"),
                     potassiumgtk.NewWindowComponent,
-                    potassiumgtk.NewWindowComponentProps("Window Title " + strconv.Itoa(state.clicks)),
+                    map[string]interface{}{
+                        "title": "Window Title " + strconv.Itoa(state.clicks),
+                    },
                     []potassium.IComponentProcessor{
                         a.CreateElement(
                             potassium.NewComponentKey("col"),
                             potassiumgtk.NewColComponent,
-                            potassium.EmptyProps{},
+                            map[string]interface{}{},
                             []potassium.IComponentProcessor{
                                 a.CreateElement(
                                     potassium.NewComponentKey("label"),
                                     potassiumgtk.NewLabelComponent,
-                                    potassiumgtk.NewLabelComponentProps(state.textValue),
+                                    map[string]interface{}{
+                                        "text": state.textValue,
+                                    },
                                     []potassium.IComponentProcessor{
                                     },
                                 ),
                                 a.CreateElement(
                                     potassium.NewComponentKey("entry"),
                                     potassiumgtk.NewEntryComponent,
-                                    potassiumgtk.NewEntryComponentProps(state.textValue, func(text string) { a.onTextChange(processor, text) }),
+                                    map[string]interface{}{
+                                        "value": state.textValue,
+                                        "onChange": func(text string) { a.onTextChange(processor, text) },
+                                    },
                                     []potassium.IComponentProcessor{
                                     },
                                 ),
                                 a.CreateElement(
                                     potassium.NewComponentKey("appButtonRow"),
                                     newAComponent,
-                                    aComponentProps{state.clicks, func() { a.onAddClick(processor) }, func() { a.onSubtractClick(processor) }},
+                                    map[string]interface{}{
+                                        "clicks": state.clicks,
+                                        "onAddClick": func() { a.onAddClick(processor) },
+                                        "onSubstractClick": func() { a.onSubtractClick(processor) },
+                                    },
                                     []potassium.IComponentProcessor{
                                     },
                                 ),

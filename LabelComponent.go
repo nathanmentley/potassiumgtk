@@ -17,13 +17,6 @@ import (
     "github.com/nathanmentley/potassium"
 )
 
-//Props
-type LabelComponentProps struct {
-    text string
-}
-func NewLabelComponentProps(text string) LabelComponentProps {  
-    return LabelComponentProps{text}
-}
 //Component
 type LabelComponent struct {
     label *gtk.Label
@@ -45,8 +38,10 @@ func (l *LabelComponent) getGtkWidget() gtk.IWidget {
 }
 //IComponent
 func (l *LabelComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
-    if props, ok := processor.GetProps().(LabelComponentProps); ok {
-        l.label.SetLabel(props.text)
+    if text, ok := processor.GetProps()["text"].(string); ok {
+        if l.label != nil && l.label.GetLabel() != text {
+            l.label.SetLabel(text)
+        }
     }
 
     return &potassium.RenderResult{}

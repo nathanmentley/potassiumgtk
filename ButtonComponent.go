@@ -17,15 +17,6 @@ import (
     "github.com/nathanmentley/potassium"
 )
 
-//Props
-type ButtonComponentProps struct {
-    title string
-    onClick func()
-}
-func NewButtonComponentProps(title string, onClick func()) ButtonComponentProps {  
-    return ButtonComponentProps{title, onClick}
-}
-
 //Component
 type ButtonComponent struct {
     button *gtk.Button
@@ -47,8 +38,8 @@ func (b *ButtonComponent) getGtkWidget() gtk.IWidget {
 }
 //component callback methods
 func (b *ButtonComponent) onClick(processor potassium.IComponentProcessor) {
-    if props, ok := processor.GetProps().(ButtonComponentProps); ok && props.onClick != nil {
-        props.onClick()
+    if onClick, ok := processor.GetProps()["onClick"].(func ()); ok && onClick != nil {
+        onClick()
     }
 }
 //IComponent
@@ -60,8 +51,8 @@ func (b *ButtonComponent) ComponentDidMount(processor potassium.IComponentProces
     })
 }
 func (b *ButtonComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
-    if props, ok := processor.GetProps().(ButtonComponentProps); ok {
-        b.button.SetLabel(props.title)
+    if title, ok := processor.GetProps()["title"].(string); ok {
+        b.button.SetLabel(title)
     }
 
     return &potassium.RenderResult{}

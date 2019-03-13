@@ -17,13 +17,6 @@ import (
     "github.com/nathanmentley/potassium"
 )
 
-//Props
-type WindowComponentProps struct {
-    title string
-}
-func NewWindowComponentProps(title string) WindowComponentProps {  
-    return WindowComponentProps{title}
-}
 //Component
 type WindowComponent struct {
     window *gtk.Window
@@ -51,8 +44,8 @@ func (w *WindowComponent) onClose() {
 func (w *WindowComponent) ComponentDidMount(processor potassium.IComponentProcessor) {
     w.Component.ComponentDidMount(processor)
     
-    if props, ok := processor.GetProps().(WindowComponentProps); ok {
-        w.window.SetTitle(props.title)
+    if title, ok := processor.GetProps()["title"].(string); ok {
+        w.window.SetTitle(title)
         w.window.Connect("destroy", w.onClose)
     }
 }
@@ -61,8 +54,8 @@ func (w *WindowComponent) ComponentDidUpdate(processor potassium.IComponentProce
     w.window.ShowAll()
 }
 func (w *WindowComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
-    if props, ok := processor.GetProps().(WindowComponentProps); ok {
-        w.window.SetTitle(props.title)
+    if title, ok := processor.GetProps()["title"].(string); ok {
+        w.window.SetTitle(title)
     }
 
     return &potassium.RenderResult{processor.GetChildren()}

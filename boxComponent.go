@@ -17,10 +17,6 @@ import (
     "github.com/nathanmentley/potassium"
 )
 
-//Props
-type boxComponentProps struct {
-    orientation gtk.Orientation
-}
 //Component
 type boxComponent struct {
     box *gtk.Box
@@ -37,8 +33,8 @@ func (b *boxComponent) getGtkWidget() gtk.IWidget {
 }
 //IComponent
 func (b *boxComponent) ComponentDidMount(processor potassium.IComponentProcessor) {
-    if props, ok := processor.GetProps().(boxComponentProps); ok {
-        box, err := gtk.BoxNew(props.orientation, 1)
+    if orientation, ok := processor.GetProps()["orientation"].(gtk.Orientation); ok {
+        box, err := gtk.BoxNew(orientation, 1)
         if err != nil {
             log.Fatal("Unable to create box:", err)
         } else {

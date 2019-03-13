@@ -30,7 +30,9 @@ func (r *RowComponent) Render(processor potassium.IComponentProcessor) *potassiu
             r.CreateElement(
                 potassium.NewComponentKey("Box"),
                 newBoxComponent,
-                boxComponentProps{gtk.ORIENTATION_HORIZONTAL},
+                map[string]interface{}{
+                    "orientation": gtk.ORIENTATION_HORIZONTAL,
+                },
                 processor.GetChildren(),
             ),
         },

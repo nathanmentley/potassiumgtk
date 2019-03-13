@@ -17,12 +17,6 @@ import (
     "github.com/nathanmentley/potassiumgtk"
 )
 
-//Props
-type aComponentProps struct {
-    clicks int
-    onAddClick func()
-    onSubstractClick func()
-}
 //Component construction
 type aComponent struct {
     potassium.Component
@@ -32,35 +26,40 @@ func newAComponent(parent potassium.IComponentProcessor) potassium.IComponent {
 }
 //component callback methods
 func (a *aComponent) onAddClick(processor potassium.IComponentProcessor) {
-    if props, ok := processor.GetProps().(aComponentProps); ok {
-        props.onAddClick()
+    if onAddClick, ok := processor.GetProps()["onAddClick"].(func()); ok {
+        onAddClick()
     }
 }
 func (a *aComponent) onSubtractClick(processor potassium.IComponentProcessor) {
-    if props, ok := processor.GetProps().(aComponentProps); ok {
-        props.onSubstractClick()
+    if onSubstractClick, ok := processor.GetProps()["onSubstractClick"].(func()); ok {
+        onSubstractClick()
     }
 }
 //component render
 func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
-    if props, ok := processor.GetProps().(aComponentProps); ok {
+    if clicks, ok := processor.GetProps()["clicks"].(int); ok {
         colChildren := []potassium.IComponentProcessor{
             a.CreateElement(
                 potassium.NewComponentKey("button"),
                 potassiumgtk.NewButtonComponent,
-                potassiumgtk.NewButtonComponentProps("Subtract Button", func() { a.onSubtractClick(processor) }),
+                map[string]interface{}{
+                    "title": "Subtract Button",
+                    "onClick": func() { a.onSubtractClick(processor) },
+                },
                 []potassium.IComponentProcessor{
                 },
             ),
         }
 
-        if props.clicks < 3 {
+        if clicks < 3 {
             colChildren = append(
                 colChildren,
                 a.CreateElement(
                     potassium.NewComponentKey("label2"),
                     potassiumgtk.NewLabelComponent,
-                    potassiumgtk.NewLabelComponentProps("Total button clicks (only less than three): " + strconv.Itoa(props.clicks)),
+                    map[string]interface{}{
+                        "text": "Total button clicks (only less than three): " + strconv.Itoa(clicks),
+                    },
                     []potassium.IComponentProcessor{
                     },
                 ),
@@ -72,25 +71,30 @@ func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.
                 a.CreateElement(
                     potassium.NewComponentKey("row"),
                     potassiumgtk.NewRowComponent,
-                    potassium.EmptyProps{},
+                    map[string]interface{}{},
                     []potassium.IComponentProcessor{
                         a.CreateElement(
                             potassium.NewComponentKey("col"),
                             potassiumgtk.NewColComponent,
-                            potassium.EmptyProps{},
+                            map[string]interface{}{},
                             colChildren,
                         ),
                         a.CreateElement(
                             potassium.NewComponentKey("label"),
                             potassiumgtk.NewLabelComponent,
-                            potassiumgtk.NewLabelComponentProps("Total button clicks: " + strconv.Itoa(props.clicks)),
+                            map[string]interface{}{
+                                "text": "Total button clicks: " + strconv.Itoa(clicks),
+                            },
                             []potassium.IComponentProcessor{
                             },
                         ),
                         a.CreateElement(
                             potassium.NewComponentKey("button2"),
                             potassiumgtk.NewButtonComponent,
-                            potassiumgtk.NewButtonComponentProps("Add Button", func() { a.onAddClick(processor) }),
+                            map[string]interface{}{
+                                "title": "Add Button",
+                                "onClick": func() { a.onAddClick(processor) },
+                            },
                             []potassium.IComponentProcessor{
                             },
                         ),
