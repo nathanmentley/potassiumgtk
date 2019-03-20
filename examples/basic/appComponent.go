@@ -53,27 +53,20 @@ func (a *appComponent) onTextChange(processor potassium.IComponentProcessor, tex
 }
 //component render
 func (a *appComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
-    return a.render(processor)
-}
-
-func (a *appComponent) render(processor potassium.IComponentProcessor) *potassium.RenderResult {
     if state, ok := processor.GetState().(appComponentState); ok {
         return &potassium.RenderResult{
             []potassium.IComponentProcessor{
                 a.CreateElement(
-                    potassium.NewComponentKey("window"),
                     potassiumgtk.NewWindowComponent,
                     map[string]interface{}{
                         "title": "Window Title " + strconv.Itoa(state.clicks),
                     },
                     []potassium.IComponentProcessor{
                         a.CreateElement(
-                            potassium.NewComponentKey("col"),
                             potassiumgtk.NewColComponent,
                             map[string]interface{}{},
                             []potassium.IComponentProcessor{
                                 a.CreateElement(
-                                    potassium.NewComponentKey("label"),
                                     potassiumgtk.NewLabelComponent,
                                     map[string]interface{}{
                                         "text": state.textValue,
@@ -82,7 +75,6 @@ func (a *appComponent) render(processor potassium.IComponentProcessor) *potassiu
                                     },
                                 ),
                                 a.CreateElement(
-                                    potassium.NewComponentKey("entry"),
                                     potassiumgtk.NewEntryComponent,
                                     map[string]interface{}{
                                         "value": state.textValue,
@@ -92,7 +84,6 @@ func (a *appComponent) render(processor potassium.IComponentProcessor) *potassiu
                                     },
                                 ),
                                 a.CreateElement(
-                                    potassium.NewComponentKey("appButtonRow"),
                                     newAComponent,
                                     map[string]interface{}{
                                         "clicks": state.clicks,

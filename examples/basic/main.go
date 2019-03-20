@@ -19,7 +19,6 @@ import (
 func main() {
     potassiumgtk.RunApp(
         potassium.NewComponentWrapper(
-            potassium.NewComponentKey("app"),
             newAppComponent,
             map[string]interface{}{},
             []potassium.IComponentProcessor{},

@@ -40,9 +40,9 @@ func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.
     if clicks, ok := processor.GetProps()["clicks"].(int); ok {
         colChildren := []potassium.IComponentProcessor{
             a.CreateElement(
-                potassium.NewComponentKey("button"),
                 potassiumgtk.NewButtonComponent,
                 map[string]interface{}{
+                    "key": "new_button",
                     "title": "Subtract Button",
                     "onClick": func() { a.onSubtractClick(processor) },
                 },
@@ -55,9 +55,9 @@ func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.
             colChildren = append(
                 colChildren,
                 a.CreateElement(
-                    potassium.NewComponentKey("label2"),
                     potassiumgtk.NewLabelComponent,
                     map[string]interface{}{
+                        "key": "total_clicks_label",
                         "text": "Total button clicks (only less than three): " + strconv.Itoa(clicks),
                     },
                     []potassium.IComponentProcessor{
@@ -69,18 +69,15 @@ func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.
         return &potassium.RenderResult{
             []potassium.IComponentProcessor{
                 a.CreateElement(
-                    potassium.NewComponentKey("row"),
                     potassiumgtk.NewRowComponent,
                     map[string]interface{}{},
                     []potassium.IComponentProcessor{
                         a.CreateElement(
-                            potassium.NewComponentKey("col"),
                             potassiumgtk.NewColComponent,
                             map[string]interface{}{},
                             colChildren,
                         ),
                         a.CreateElement(
-                            potassium.NewComponentKey("label"),
                             potassiumgtk.NewLabelComponent,
                             map[string]interface{}{
                                 "text": "Total button clicks: " + strconv.Itoa(clicks),
@@ -89,7 +86,6 @@ func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.
                             },
                         ),
                         a.CreateElement(
-                            potassium.NewComponentKey("button2"),
                             potassiumgtk.NewButtonComponent,
                             map[string]interface{}{
                                 "title": "Add Button",

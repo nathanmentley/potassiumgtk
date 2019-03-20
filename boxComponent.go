@@ -33,6 +33,8 @@ func (b *boxComponent) getGtkWidget() gtk.IWidget {
 }
 //IComponent
 func (b *boxComponent) ComponentDidMount(processor potassium.IComponentProcessor) {
+    b.Component.ComponentDidMount(processor)
+
     if orientation, ok := processor.GetProps()["orientation"].(gtk.Orientation); ok {
         box, err := gtk.BoxNew(orientation, 1)
         if err != nil {
