@@ -30,7 +30,7 @@ func NewButtonComponent(parent potassium.IComponentProcessor) potassium.ICompone
         log.Fatal("Unable to create button:", err)
     }
 
-    return &ButtonComponent{button, potassium.NewComponent(parent), newGtkComponent()}
+    return &ButtonComponent{button, potassium.NewComponent(parent), newGtkComponent(&button.Widget)}
 }
 //iGtkComponent
 func (b *ButtonComponent) getGtkWidget() gtk.IWidget {
@@ -43,12 +43,25 @@ func (b *ButtonComponent) onClick(processor potassium.IComponentProcessor) {
     }
 }
 //IComponent
+func (b *ButtonComponent) ComponentWillUpdate(processor potassium.IComponentProcessor) {
+    b.Component.ComponentWillUpdate(processor)
+    b.gtkComponent.componentWillUpdate(processor)
+}
 func (b *ButtonComponent) ComponentDidMount(processor potassium.IComponentProcessor) {
     b.Component.ComponentDidMount(processor)
+    b.gtkComponent.componentDidMount(processor)
     
     b.button.Connect("clicked", func() { 
         b.onClick(processor)
     })
+}
+func (b *ButtonComponent) ComponentDidUpdate(processor potassium.IComponentProcessor) {
+    b.Component.ComponentDidUpdate(processor)
+    b.gtkComponent.componentDidUpdate(processor)
+}
+func (b *ButtonComponent) ComponentWillUnmount(processor potassium.IComponentProcessor) {
+    b.Component.ComponentWillUnmount(processor)
+    b.gtkComponent.componentWillUnmount(processor)
 }
 func (b *ButtonComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
     if title, ok := processor.GetProps()["title"].(string); ok {

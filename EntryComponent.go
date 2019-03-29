@@ -30,7 +30,7 @@ func NewEntryComponent(parent potassium.IComponentProcessor) potassium.IComponen
         log.Fatal("Unable to create entry:", err)
     }
 
-    return &EntryComponent{entry, potassium.NewComponent(parent), newGtkComponent()}
+    return &EntryComponent{entry, potassium.NewComponent(parent), newGtkComponent(&entry.Widget)}
 }
 //component callback methods
 func (e *EntryComponent) onChange(processor potassium.IComponentProcessor) {
@@ -43,12 +43,25 @@ func (e *EntryComponent) onChange(processor potassium.IComponentProcessor) {
         }
     }
 }
+func (e *EntryComponent) ComponentWillUpdate(processor potassium.IComponentProcessor) {
+    e.Component.ComponentWillUpdate(processor)
+    e.gtkComponent.componentWillUpdate(processor)
+}
 func (e *EntryComponent) ComponentDidMount(processor potassium.IComponentProcessor) {
     e.Component.ComponentDidMount(processor)
+    e.gtkComponent.componentDidMount(processor)
     
     e.entry.Connect("changed", func() { 
         e.onChange(processor)
     })
+}
+func (e *EntryComponent) ComponentDidUpdate(processor potassium.IComponentProcessor) {
+    e.Component.ComponentDidUpdate(processor)
+    e.gtkComponent.componentDidUpdate(processor)
+}
+func (e *EntryComponent) ComponentWillUnmount(processor potassium.IComponentProcessor) {
+    e.Component.ComponentWillUnmount(processor)
+    e.gtkComponent.componentWillUnmount(processor)
 }
 //iGtkComponent
 func (e *EntryComponent) getGtkWidget() gtk.IWidget {

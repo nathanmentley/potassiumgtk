@@ -38,34 +38,6 @@ func (a *aComponent) onSubtractClick(processor potassium.IComponentProcessor) {
 //component render
 func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
     if clicks, ok := processor.GetProps()["clicks"].(int); ok {
-        colChildren := []potassium.IComponentProcessor{
-            a.CreateElement(
-                potassiumgtk.NewButtonComponent,
-                map[string]interface{}{
-                    "key": "new_button",
-                    "title": "Subtract Button",
-                    "onClick": func() { a.onSubtractClick(processor) },
-                },
-                []potassium.IComponentProcessor{
-                },
-            ),
-        }
-
-        if clicks < 3 {
-            colChildren = append(
-                colChildren,
-                a.CreateElement(
-                    potassiumgtk.NewLabelComponent,
-                    map[string]interface{}{
-                        "key": "total_clicks_label",
-                        "text": "Total button clicks (only less than three): " + strconv.Itoa(clicks),
-                    },
-                    []potassium.IComponentProcessor{
-                    },
-                ),
-            )
-        }
-
         return &potassium.RenderResult{
             []potassium.IComponentProcessor{
                 a.CreateElement(
@@ -75,11 +47,31 @@ func (a *aComponent) Render(processor potassium.IComponentProcessor) *potassium.
                         a.CreateElement(
                             potassiumgtk.NewColComponent,
                             map[string]interface{}{},
-                            colChildren,
+                            []potassium.IComponentProcessor{
+                                a.CreateElement(
+                                    potassiumgtk.NewButtonComponent,
+                                    map[string]interface{}{
+                                        "title": "Subtract Button",
+                                        "onClick": func() { a.onSubtractClick(processor) },
+                                    },
+                                    []potassium.IComponentProcessor{
+                                    },
+                                ),
+                                a.CreateElement(
+                                    potassiumgtk.NewLabelComponent,
+                                    map[string]interface{}{
+                                        "hide": clicks > 2,
+                                        "text": "Total button clicks (only less than three): " + strconv.Itoa(clicks),
+                                    },
+                                    []potassium.IComponentProcessor{
+                                    },
+                                ),
+                            },
                         ),
                         a.CreateElement(
                             potassiumgtk.NewLabelComponent,
                             map[string]interface{}{
+                                "hide": clicks <= 2,
                                 "text": "Total button clicks: " + strconv.Itoa(clicks),
                             },
                             []potassium.IComponentProcessor{

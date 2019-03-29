@@ -25,24 +25,41 @@ type boxComponent struct {
     gtkComponent
 }
 func newBoxComponent(parent potassium.IComponentProcessor) potassium.IComponent {
-    return &boxComponent{nil, potassium.NewComponent(parent), newGtkComponent()}
+    return &boxComponent{nil, potassium.NewComponent(parent), newGtkComponent(nil)}
 }
 //iGtkComponent
 func (b *boxComponent) getGtkWidget() gtk.IWidget {
     return b.box
 }
+
+
 //IComponent
+func (b *boxComponent) ComponentWillUpdate(processor potassium.IComponentProcessor) {
+    b.Component.ComponentWillUpdate(processor)
+    b.gtkComponent.componentWillUpdate(processor)
+}
 func (b *boxComponent) ComponentDidMount(processor potassium.IComponentProcessor) {
     b.Component.ComponentDidMount(processor)
+    b.gtkComponent.componentDidMount(processor)
 
     if orientation, ok := processor.GetProps()["orientation"].(gtk.Orientation); ok {
         box, err := gtk.BoxNew(orientation, 1)
+        b.gtkComponent.widget = &box.Widget
+
         if err != nil {
             log.Fatal("Unable to create box:", err)
         } else {
             b.box = box
         }
     }
+}
+func (b *boxComponent) ComponentDidUpdate(processor potassium.IComponentProcessor) {
+    b.Component.ComponentDidUpdate(processor)
+    b.gtkComponent.componentDidUpdate(processor)
+}
+func (b *boxComponent) ComponentWillUnmount(processor potassium.IComponentProcessor) {
+    b.Component.ComponentWillUnmount(processor)
+    b.gtkComponent.componentWillUnmount(processor)
 }
 func (b *boxComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
     return &potassium.RenderResult{processor.GetChildren()}

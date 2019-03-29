@@ -30,7 +30,23 @@ func NewLabelComponent(parent potassium.IComponentProcessor) potassium.IComponen
         log.Fatal("Unable to create label:", err)
     }
 
-    return &LabelComponent{label, potassium.NewComponent(parent), newGtkComponent()}
+    return &LabelComponent{label, potassium.NewComponent(parent), newGtkComponent(&label.Widget)}
+}
+func (l *LabelComponent) ComponentWillUpdate(processor potassium.IComponentProcessor) {
+    l.Component.ComponentWillUpdate(processor)
+    l.gtkComponent.componentWillUpdate(processor)
+}
+func (l *LabelComponent) ComponentDidMount(processor potassium.IComponentProcessor) {
+    l.Component.ComponentDidMount(processor)
+    l.gtkComponent.componentDidMount(processor)
+}
+func (l *LabelComponent) ComponentDidUpdate(processor potassium.IComponentProcessor) {
+    l.Component.ComponentDidUpdate(processor)
+    l.gtkComponent.componentDidUpdate(processor)
+}
+func (l *LabelComponent) ComponentWillUnmount(processor potassium.IComponentProcessor) {
+    l.Component.ComponentWillUnmount(processor)
+    l.gtkComponent.componentWillUnmount(processor)
 }
 //iGtkComponent
 func (l *LabelComponent) getGtkWidget() gtk.IWidget {

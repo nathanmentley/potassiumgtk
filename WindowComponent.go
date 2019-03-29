@@ -30,7 +30,7 @@ func NewWindowComponent(parent potassium.IComponentProcessor) potassium.ICompone
         log.Fatal("Unable to create window:", err)
     }
 
-    return &WindowComponent{win, potassium.NewComponent(parent), newGtkComponent()}
+    return &WindowComponent{win, potassium.NewComponent(parent), newGtkComponent(&win.Widget)}
 }
 //iGtkComponent
 func (w *WindowComponent) getGtkWidget() gtk.IWidget {
@@ -41,8 +41,13 @@ func (w *WindowComponent) onClose() {
     gtk.MainQuit()
 }
 //IComponent
+func (w *WindowComponent) ComponentWillUpdate(processor potassium.IComponentProcessor) {
+    w.Component.ComponentWillUpdate(processor)
+    w.gtkComponent.componentWillUpdate(processor)
+}
 func (w *WindowComponent) ComponentDidMount(processor potassium.IComponentProcessor) {
     w.Component.ComponentDidMount(processor)
+    w.gtkComponent.componentDidMount(processor)
     
     if title, ok := processor.GetProps()["title"].(string); ok {
         w.window.SetTitle(title)
@@ -50,8 +55,12 @@ func (w *WindowComponent) ComponentDidMount(processor potassium.IComponentProces
     }
 }
 func (w *WindowComponent) ComponentDidUpdate(processor potassium.IComponentProcessor) {
-    // Recursively show all widgets contained in this window.
-    w.window.ShowAll()
+    w.Component.ComponentDidUpdate(processor)
+    w.gtkComponent.componentDidUpdate(processor)
+}
+func (w *WindowComponent) ComponentWillUnmount(processor potassium.IComponentProcessor) {
+    w.Component.ComponentWillUnmount(processor)
+    w.gtkComponent.componentWillUnmount(processor)
 }
 func (w *WindowComponent) Render(processor potassium.IComponentProcessor) *potassium.RenderResult {
     if title, ok := processor.GetProps()["title"].(string); ok {

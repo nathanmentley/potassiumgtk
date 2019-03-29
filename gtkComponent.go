@@ -10,11 +10,17 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 package potassiumgtk
 
+import (
+    "github.com/gotk3/gotk3/gtk"
+    "github.com/nathanmentley/potassium"
+)
+
 type gtkComponent struct {
     index int
+    widget *gtk.Widget
 }
-func newGtkComponent() gtkComponent {
-    return gtkComponent{-1}
+func newGtkComponent(widget *gtk.Widget) gtkComponent {
+    return gtkComponent{-1, widget}
 }
 
 func (g *gtkComponent) getIndex() int {
@@ -23,3 +29,19 @@ func (g *gtkComponent) getIndex() int {
 func (g *gtkComponent) setIndex(index int) {
     g.index = index
 }
+func (g *gtkComponent) componentWillUpdate(processor potassium.IComponentProcessor) {}
+func (g *gtkComponent) componentDidMount(processor potassium.IComponentProcessor) {}
+func (g *gtkComponent) componentDidUpdate(processor potassium.IComponentProcessor) {
+    if g.widget != nil {
+        if hide, ok := processor.GetProps()["hide"].(bool); ok {
+            if hide {
+                g.widget.Hide()
+            } else {
+                g.widget.Show()
+            }
+        } else {
+            g.widget.Show()
+        }
+    }
+}
+func (g *gtkComponent) componentWillUnmount(processor potassium.IComponentProcessor) {}
